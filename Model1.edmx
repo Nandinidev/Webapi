@@ -1,0 +1,455 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="OnlinexamModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Onlinexam.dbo.tblAnswer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="tblAnswer">
+          <Key>
+            <PropertyRef Name="Answer_id" />
+          </Key>
+          <Property Name="Answer_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Question_id" Type="int" />
+          <Property Name="UserAnswer" Type="varchar" MaxLength="1" />
+          <Property Name="User_id" Type="int" />
+        </EntityType>
+        <EntityType Name="tblFile">
+          <Key>
+            <PropertyRef Name="file_id" />
+          </Key>
+          <Property Name="file_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="file_name" Type="varchar" MaxLength="50" />
+          <Property Name="Exam_topic" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tblQuestionBank">
+          <Key>
+            <PropertyRef Name="Q_id" />
+          </Key>
+          <Property Name="Q_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="file_id" Type="int" />
+          <Property Name="Question" Type="varchar" MaxLength="5000" />
+          <Property Name="Option1" Type="varchar" MaxLength="1000" />
+          <Property Name="Option2" Type="varchar" MaxLength="1000" />
+          <Property Name="Option3" Type="varchar" MaxLength="1000" />
+          <Property Name="Option4" Type="varchar" MaxLength="1000" />
+          <Property Name="CorrectOption" Type="varchar" MaxLength="1" />
+          <Property Name="QuestionMarks" Type="int" />
+          <Property Name="QuestionLevel" Type="int" />
+        </EntityType>
+        <EntityType Name="tblReport">
+          <Key>
+            <PropertyRef Name="Test_id" />
+          </Key>
+          <Property Name="Test_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User_id" Type="int" />
+          <Property Name="Score" Type="int" />
+          <Property Name="ExamTopic" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tblUser">
+          <Key>
+            <PropertyRef Name="User_id" />
+          </Key>
+          <Property Name="User_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Full_Name" Type="varchar" MaxLength="100" />
+          <Property Name="Email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Mobile_Number" Type="varchar" MaxLength="20" />
+          <Property Name="Date_of_Birth" Type="date" />
+          <Property Name="City" Type="varchar" MaxLength="100" />
+          <Property Name="State" Type="varchar" MaxLength="100" />
+          <Property Name="Qualification" Type="varchar" MaxLength="20" />
+          <Property Name="Year_of_Completion" Type="varchar" MaxLength="4" />
+        </EntityType>
+        <EntityType Name="tblUserLogin">
+          <Key>
+            <PropertyRef Name="Login_id" />
+          </Key>
+          <Property Name="Login_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User_id" Type="int" />
+          <Property Name="Email" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Pwd" Type="varchar" MaxLength="8" />
+        </EntityType>
+        <Association Name="FK__tblAnswer__Quest__3B75D760">
+          <End Role="tblQuestionBank" Type="Self.tblQuestionBank" Multiplicity="0..1" />
+          <End Role="tblAnswer" Type="Self.tblAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblQuestionBank">
+              <PropertyRef Name="Q_id" />
+            </Principal>
+            <Dependent Role="tblAnswer">
+              <PropertyRef Name="Question_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblAnswer__User___3C69FB99">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblAnswer" Type="Self.tblAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="tblAnswer">
+              <PropertyRef Name="User_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblQuesti__file___1B0907CE">
+          <End Role="tblFile" Type="Self.tblFile" Multiplicity="0..1" />
+          <End Role="tblQuestionBank" Type="Self.tblQuestionBank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFile">
+              <PropertyRef Name="file_id" />
+            </Principal>
+            <Dependent Role="tblQuestionBank">
+              <PropertyRef Name="file_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblReport__User___3F466844">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblReport" Type="Self.tblReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="tblReport">
+              <PropertyRef Name="User_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblUserLo__User___4316F928">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblUserLogin" Type="Self.tblUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="tblUserLogin">
+              <PropertyRef Name="User_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="proLoginCheck" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="mail" Type="varchar" Mode="In" />
+          <Parameter Name="pass" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="OnlinexamModelStoreContainer">
+          <EntitySet Name="tblFile" EntityType="Self.tblFile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblQuestionBank" EntityType="Self.tblQuestionBank" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblReport" EntityType="Self.tblReport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUser" EntityType="Self.tblUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblUserLogin" EntityType="Self.tblUserLogin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblAnswer" EntityType="Self.tblAnswer" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [tblAnswer].[Answer_id] AS [Answer_id], 
+    [tblAnswer].[Question_id] AS [Question_id], 
+    [tblAnswer].[UserAnswer] AS [UserAnswer], 
+    [tblAnswer].[User_id] AS [User_id]
+    FROM [dbo].[tblAnswer] AS [tblAnswer]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__tblAnswer__Quest__3B75D760" Association="Self.FK__tblAnswer__Quest__3B75D760">
+            <End Role="tblQuestionBank" EntitySet="tblQuestionBank" />
+            <End Role="tblAnswer" EntitySet="tblAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblAnswer__User___3C69FB99" Association="Self.FK__tblAnswer__User___3C69FB99">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblAnswer" EntitySet="tblAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblQuesti__file___1B0907CE" Association="Self.FK__tblQuesti__file___1B0907CE">
+            <End Role="tblFile" EntitySet="tblFile" />
+            <End Role="tblQuestionBank" EntitySet="tblQuestionBank" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblReport__User___3F466844" Association="Self.FK__tblReport__User___3F466844">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblReport" EntitySet="tblReport" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblUserLo__User___4316F928" Association="Self.FK__tblUserLo__User___4316F928">
+            <End Role="tblUser" EntitySet="tblUser" />
+            <End Role="tblUserLogin" EntitySet="tblUserLogin" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="OnlinexamModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblFile">
+          <Key>
+            <PropertyRef Name="file_id" />
+          </Key>
+          <Property Name="file_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="file_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Exam_topic" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tblQuestionBanks" Relationship="Self.FK__tblQuesti__file___1B0907CE" FromRole="tblFile" ToRole="tblQuestionBank" />
+        </EntityType>
+        <EntityType Name="tblQuestionBank">
+          <Key>
+            <PropertyRef Name="Q_id" />
+          </Key>
+          <Property Name="Q_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="file_id" Type="Int32" />
+          <Property Name="Question" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="Option1" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Option2" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Option3" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Option4" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="CorrectOption" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="QuestionMarks" Type="Int32" />
+          <Property Name="QuestionLevel" Type="Int32" />
+          <NavigationProperty Name="tblFile" Relationship="Self.FK__tblQuesti__file___1B0907CE" FromRole="tblQuestionBank" ToRole="tblFile" />
+          <NavigationProperty Name="tblAnswers" Relationship="Self.FK__tblAnswer__Quest__3B75D760" FromRole="tblQuestionBank" ToRole="tblAnswer" />
+        </EntityType>
+        <EntityType Name="tblReport">
+          <Key>
+            <PropertyRef Name="Test_id" />
+          </Key>
+          <Property Name="Test_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_id" Type="Int32" />
+          <Property Name="Score" Type="Int32" />
+          <Property Name="ExamTopic" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tblUser" Relationship="Self.FK__tblReport__User___3F466844" FromRole="tblReport" ToRole="tblUser" />
+        </EntityType>
+        <EntityType Name="tblUser">
+          <Key>
+            <PropertyRef Name="User_id" />
+          </Key>
+          <Property Name="User_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Full_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Mobile_Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Date_of_Birth" Type="DateTime" Precision="0" />
+          <Property Name="City" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Qualification" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Year_of_Completion" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tblReports" Relationship="Self.FK__tblReport__User___3F466844" FromRole="tblUser" ToRole="tblReport" />
+          <NavigationProperty Name="tblAnswers" Relationship="Self.FK__tblAnswer__User___3C69FB99" FromRole="tblUser" ToRole="tblAnswer" />
+          <NavigationProperty Name="tblUserLogins" Relationship="Self.FK__tblUserLo__User___4316F928" FromRole="tblUser" ToRole="tblUserLogin" />
+        </EntityType>
+        <EntityType Name="tblUserLogin">
+          <Key>
+            <PropertyRef Name="Login_id" />
+          </Key>
+          <Property Name="Login_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_id" Type="Int32" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Pwd" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tblUser" Relationship="Self.FK__tblUserLo__User___4316F928" FromRole="tblUserLogin" ToRole="tblUser" />
+        </EntityType>
+        <EntityType Name="tblAnswer">
+          <Key>
+            <PropertyRef Name="Answer_id" />
+          </Key>
+          <Property Name="Answer_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Question_id" Type="Int32" />
+          <Property Name="UserAnswer" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="User_id" Type="Int32" />
+          <NavigationProperty Name="tblQuestionBank" Relationship="Self.FK__tblAnswer__Quest__3B75D760" FromRole="tblAnswer" ToRole="tblQuestionBank" />
+          <NavigationProperty Name="tblUser" Relationship="Self.FK__tblAnswer__User___3C69FB99" FromRole="tblAnswer" ToRole="tblUser" />
+        </EntityType>
+        <Association Name="FK__tblQuesti__file___1B0907CE">
+          <End Role="tblFile" Type="Self.tblFile" Multiplicity="0..1" />
+          <End Role="tblQuestionBank" Type="Self.tblQuestionBank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblFile">
+              <PropertyRef Name="file_id" />
+            </Principal>
+            <Dependent Role="tblQuestionBank">
+              <PropertyRef Name="file_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblAnswer__Quest__3B75D760">
+          <End Role="tblQuestionBank" Type="Self.tblQuestionBank" Multiplicity="0..1" />
+          <End Role="tblAnswer" Type="Self.tblAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblQuestionBank">
+              <PropertyRef Name="Q_id" />
+            </Principal>
+            <Dependent Role="tblAnswer">
+              <PropertyRef Name="Question_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblReport__User___3F466844">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblReport" Type="Self.tblReport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="tblReport">
+              <PropertyRef Name="User_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblAnswer__User___3C69FB99">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblAnswer" Type="Self.tblAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="tblAnswer">
+              <PropertyRef Name="User_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tblUserLo__User___4316F928">
+          <End Role="tblUser" Type="Self.tblUser" Multiplicity="0..1" />
+          <End Role="tblUserLogin" Type="Self.tblUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblUser">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="tblUserLogin">
+              <PropertyRef Name="User_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="OnlinexamEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblFiles" EntityType="Self.tblFile" />
+          <EntitySet Name="tblQuestionBanks" EntityType="Self.tblQuestionBank" />
+          <EntitySet Name="tblReports" EntityType="Self.tblReport" />
+          <EntitySet Name="tblUsers" EntityType="Self.tblUser" />
+          <EntitySet Name="tblUserLogins" EntityType="Self.tblUserLogin" />
+          <EntitySet Name="tblAnswers" EntityType="Self.tblAnswer" />
+          <AssociationSet Name="FK__tblQuesti__file___1B0907CE" Association="Self.FK__tblQuesti__file___1B0907CE">
+            <End Role="tblFile" EntitySet="tblFiles" />
+            <End Role="tblQuestionBank" EntitySet="tblQuestionBanks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblAnswer__Quest__3B75D760" Association="Self.FK__tblAnswer__Quest__3B75D760">
+            <End Role="tblQuestionBank" EntitySet="tblQuestionBanks" />
+            <End Role="tblAnswer" EntitySet="tblAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblReport__User___3F466844" Association="Self.FK__tblReport__User___3F466844">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblReport" EntitySet="tblReports" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblAnswer__User___3C69FB99" Association="Self.FK__tblAnswer__User___3C69FB99">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblAnswer" EntitySet="tblAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tblUserLo__User___4316F928" Association="Self.FK__tblUserLo__User___4316F928">
+            <End Role="tblUser" EntitySet="tblUsers" />
+            <End Role="tblUserLogin" EntitySet="tblUserLogins" />
+          </AssociationSet>
+          <FunctionImport Name="proLoginCheck" ReturnType="Collection(OnlinexamModel.proLoginCheck_Result)">
+            <Parameter Name="mail" Mode="In" Type="String" />
+            <Parameter Name="pass" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="proLoginCheck_Result">
+          <Property Type="String" Name="email" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="password" Nullable="true" MaxLength="8" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="OnlinexamModelStoreContainer" CdmEntityContainer="OnlinexamEntities1">
+          <EntitySetMapping Name="tblFiles">
+            <EntityTypeMapping TypeName="OnlinexamModel.tblFile">
+              <MappingFragment StoreEntitySet="tblFile">
+                <ScalarProperty Name="file_id" ColumnName="file_id" />
+                <ScalarProperty Name="file_name" ColumnName="file_name" />
+                <ScalarProperty Name="Exam_topic" ColumnName="Exam_topic" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblQuestionBanks">
+            <EntityTypeMapping TypeName="OnlinexamModel.tblQuestionBank">
+              <MappingFragment StoreEntitySet="tblQuestionBank">
+                <ScalarProperty Name="Q_id" ColumnName="Q_id" />
+                <ScalarProperty Name="file_id" ColumnName="file_id" />
+                <ScalarProperty Name="Question" ColumnName="Question" />
+                <ScalarProperty Name="Option1" ColumnName="Option1" />
+                <ScalarProperty Name="Option2" ColumnName="Option2" />
+                <ScalarProperty Name="Option3" ColumnName="Option3" />
+                <ScalarProperty Name="Option4" ColumnName="Option4" />
+                <ScalarProperty Name="CorrectOption" ColumnName="CorrectOption" />
+                <ScalarProperty Name="QuestionMarks" ColumnName="QuestionMarks" />
+                <ScalarProperty Name="QuestionLevel" ColumnName="QuestionLevel" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblReports">
+            <EntityTypeMapping TypeName="OnlinexamModel.tblReport">
+              <MappingFragment StoreEntitySet="tblReport">
+                <ScalarProperty Name="Test_id" ColumnName="Test_id" />
+                <ScalarProperty Name="User_id" ColumnName="User_id" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="ExamTopic" ColumnName="ExamTopic" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUsers">
+            <EntityTypeMapping TypeName="OnlinexamModel.tblUser">
+              <MappingFragment StoreEntitySet="tblUser">
+                <ScalarProperty Name="User_id" ColumnName="User_id" />
+                <ScalarProperty Name="Full_Name" ColumnName="Full_Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Mobile_Number" ColumnName="Mobile_Number" />
+                <ScalarProperty Name="Date_of_Birth" ColumnName="Date_of_Birth" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Qualification" ColumnName="Qualification" />
+                <ScalarProperty Name="Year_of_Completion" ColumnName="Year_of_Completion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUserLogins">
+            <EntityTypeMapping TypeName="OnlinexamModel.tblUserLogin">
+              <MappingFragment StoreEntitySet="tblUserLogin">
+                <ScalarProperty Name="Login_id" ColumnName="Login_id" />
+                <ScalarProperty Name="User_id" ColumnName="User_id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Pwd" ColumnName="Pwd" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblAnswers">
+            <EntityTypeMapping TypeName="OnlinexamModel.tblAnswer">
+              <MappingFragment StoreEntitySet="tblAnswer">
+                <ScalarProperty Name="Answer_id" ColumnName="Answer_id" />
+                <ScalarProperty Name="Question_id" ColumnName="Question_id" />
+                <ScalarProperty Name="UserAnswer" ColumnName="UserAnswer" />
+                <ScalarProperty Name="User_id" ColumnName="User_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="proLoginCheck" FunctionName="OnlinexamModel.Store.proLoginCheck">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="OnlinexamModel.proLoginCheck_Result">
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
